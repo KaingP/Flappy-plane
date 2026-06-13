@@ -1,6 +1,8 @@
 import pygame
 from pygame.locals import *
 import random
+import sys
+import os
 
 pygame.init()
 
@@ -31,10 +33,20 @@ score = 0
 pass_pipe = False
 
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
 #load images
-bg = pygame.image.load('Source/img/bg.png')
-ground_img = pygame.image.load('Source/img/ground.png')
-button_img = pygame.image.load('Source/img/restart.png')
+bg = pygame.image.load(resource_path('Source/img/bg.png'))
+ground_img = pygame.image.load(resource_path('Source/img/ground.png'))
+button_img = pygame.image.load(resource_path('Source/img/restart.png'))
 
 
 def draw_text(text, font, text_col, x, y):
@@ -58,7 +70,7 @@ class Plane(pygame.sprite.Sprite):
         self.index = 0
         self.counter = 0
         for num in range(1, 4):
-            img = pygame.image.load(f'Source/img/plane{num}.png')
+            img = pygame.image.load(resource_path(f'Source/img/plane{num}.png'))
             self.images.append(img)
         self.image = self.images[self.index]
         self.rect = self.image.get_rect()
@@ -105,7 +117,7 @@ class Plane(pygame.sprite.Sprite):
 class Pipe(pygame.sprite.Sprite):
     def __init__(self, x, y, position):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('Source/img/pipe.png')
+        self.image = pygame.image.load(resource_path('Source/img/pipe.png'))
         self.rect = self.image.get_rect()
         #position 1 is from the top, -1 is from the bottom
         if position == 1:
